@@ -233,6 +233,7 @@ when it starts, and shows a clear error if something is wrong (for example a dup
 | `groups` | Names of the two SharePoint groups and of the supervisors' permission level. |
 | `recordId` | Prefix (`GR`) and number of digits (6). |
 | `listView` | Date field used for the default date range, default range in days, page size, default sort. |
+| `page` | Name, title and intro text of the page the provisioning script creates, and whether it is added to the navigation. |
 | `export` | Maximum rows per export (10,000), file name prefix, sheet name. |
 
 ### 3. Web part settings (on the SharePoint page)
@@ -264,6 +265,15 @@ The script `provisioning/Provision-GoodsReceiving.ps1` reads `fields.json` and `
 - Permissions: the list and library stop inheriting permissions (existing access is copied).
   Receiving Team gets Contribute; Receiving Supervisors get the Receiving Supervisor level.
   Use `-SkipPermissions` to leave permissions alone.
+- The page **Goods Receiving** (`SitePages/Goods-Receiving.aspx`):
+  - a banner (the page title on a coloured block)
+  - one section with a short intro text and the web part
+  - published, with a link at the top of the site navigation
+  - name, title and intro text come from the `page` section of `solution.json`
+  - the list and library themselves are not added to the navigation, so people work through the page
+  - the page needs the `.sppkg` to be deployed first. If it isn't, the script says so and skips
+    the page; run the script again after deployment
+  - an existing page is never changed. Use `-SkipPage` to not create a page at all.
 
 It is **safe to run again**. Existing items are skipped. New fields and new choice values from the
 configuration are added. Nothing is deleted.
@@ -286,7 +296,8 @@ DEPLOYMENT.md explains how IT creates one (a one-time, 2-minute task).
 SPFx has no offline workbench any more. You test against a real SharePoint site using the
 **hosted workbench**. Use a test site, not the production site.
 
-1. Run the provisioning script against your **test site** (see above).
+1. Run the provisioning script against your **test site** (see above). It skips the page because
+   the package is not deployed there yet. That is fine for the workbench.
 2. Add yourself to *Receiving Team* or *Receiving Supervisors* on that site.
 3. Trust the local development certificate (once per computer):
    ```bash
@@ -497,8 +508,8 @@ Similarly, a user is a receiver if they are a direct member of *Receiving Team* 
 5. **Check the organisation's version history limits.** Newer tenants may use *automatic* version
    trimming (SharePoint admin center → Settings → Version history limits). For audit purposes,
    make sure versions of this list are not trimmed below what your quality system requires.
-6. **Hide the list from casual browsing.** Remove the list from the site navigation (the script
-   adds it to Quick Launch). Tell users to work through the page with the web part.
+6. **Keep people on the page.** The script does not put the list and library in the site
+   navigation, only the Goods Receiving page. Tell users to work through that page.
 
 ---
 

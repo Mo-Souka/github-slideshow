@@ -40,6 +40,12 @@
     "defaultSortFieldKey": "receivingDate",
     "defaultSortAscending": false
   },
+  "page": {
+    "name": "Goods-Receiving",
+    "title": "Goods Receiving",
+    "introText": "Record incoming material shipments, attach the delivery documents and send each record to a supervisor for approval.",
+    "addToNavigation": true
+  },
   "export": {
     "maxRows": 10000,
     "fileNamePrefix": "Goods-Receiving",

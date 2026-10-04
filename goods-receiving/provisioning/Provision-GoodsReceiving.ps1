@@ -34,6 +34,12 @@
     grant the two groups access. Use this if your site owner manages
     permissions manually.
 
+.PARAMETER SkipPage
+    Do not create the "Goods Receiving" page. By default the script creates a
+    published page (banner + intro text + the web part) and adds it to the
+    site navigation. This needs the .sppkg to be deployed first (DEPLOYMENT.md,
+    section 4); if it is not, the script skips the page and tells you to re-run it.
+
 .PARAMETER ConfigFolder
     Folder that contains fields.json and solution.json. Defaults to ../src/config.
 
@@ -55,7 +61,11 @@ param(
 
     [switch] $SkipPermissions,
 
-    [string] $ConfigFolder = (Join-Path $PSScriptRoot '..' 'src' 'config')
+    [switch] $SkipPage,
+
+    [string] $ConfigFolder = (Join-Path $PSScriptRoot '..' 'src' 'config'),
+
+    [string] $ManifestPath = (Join-Path $PSScriptRoot '..' 'src' 'webparts' 'goodsReceiving' 'GoodsReceivingWebPart.manifest.json')
 )
 
 $ErrorActionPreference = 'Stop'
@@ -126,7 +136,9 @@ function Get-OrCreateList([string] $Title, [string] $Url, [string] $Template, [s
         Write-Exists "'$Title'"
         return $list
     }
-    New-PnPList -Title $Title -Url $Url -Template $Template -OnQuickLaunch | Out-Null
+    # Not added to the site navigation on purpose: people should work through the
+    # Goods Receiving page, where the app applies the workflow rules.
+    New-PnPList -Title $Title -Url $Url -Template $Template | Out-Null
     $list = Get-PnPList -Identity $Title
     if ($Description) {
         Set-PnPList -Identity $list -Description $Description | Out-Null
@@ -467,13 +479,100 @@ if ($SkipPermissions) {
 }
 
 # ---------------------------------------------------------------------------
+# 5. Page with the web part
+# ---------------------------------------------------------------------------
+# Reads the web part ID from its manifest (the first "id" in the file).
+function Get-WebPartId([string] $Path) {
+    if (-not (Test-Path $Path)) { return $null }
+    $match = [regex]::Match((Get-Content $Path -Raw), '"id"\s*:\s*"([0-9a-fA-F-]{36})"')
+    if ($match.Success) { return $match.Groups[1].Value }
+    return $null
+}
+
+function Get-ExistingPage([string] $Name) {
+    try { return Get-PnPPage -Identity $Name -ErrorAction Stop } catch { return $null }
+}
+
+$pageConfig = Get-Value $solution 'page'
+$pageResult = 'skipped'
+if ($SkipPage) {
+    Write-Step 'Page skipped (-SkipPage)'
+} elseif (-not $pageConfig) {
+    Write-Step 'Page skipped (no "page" section in solution.json)'
+} else {
+    $pageName = $pageConfig.name
+    $pageTitle = Get-Value $pageConfig 'title' $pageName
+    Write-Step "Page '$pageTitle' (SitePages/$pageName.aspx)"
+
+    if (Get-ExistingPage $pageName) {
+        Write-Exists "Page '$pageTitle' (left unchanged)"
+        $pageResult = 'exists'
+    } else {
+        # A page has to exist before SharePoint can list the web parts available for it.
+        Add-PnPPage -Name $pageName -LayoutType Article | Out-Null
+        Set-PnPPage -Identity $pageName -Title $pageTitle | Out-Null
+        try {
+            # Banner style: the title on a coloured block (no picture needed).
+            Set-PnPPage -Identity $pageName -HeaderLayoutType ColorBlock | Out-Null
+        } catch {
+            Write-Warn "Banner style not changed (the page keeps the default title area): $($_.Exception.Message)"
+        }
+
+        $webPartId = Get-WebPartId $ManifestPath
+        $component = Get-PnPPageComponent -Page $pageName -ListAvailable |
+            Where-Object {
+                ($webPartId -and ([string]$_.Id).Trim('{', '}') -eq $webPartId) -or
+                $_.Name -eq 'GoodsReceivingWebPart' -or $_.Name -eq 'Goods Receiving'
+            } |
+            Select-Object -First 1
+
+        if (-not $component) {
+            Remove-PnPPage -Identity $pageName -Force
+            Write-Warn 'The Goods Receiving web part is not available on this site yet, so the page was not created.'
+            Write-Warn 'Deploy goods-receiving.sppkg to the App Catalog (DEPLOYMENT.md, section 4), then run this script again.'
+            $pageResult = 'missing-webpart'
+        } else {
+            # Banner = the page's title area. Below it: one section with intro text and the web part.
+            Add-PnPPageSection -Page $pageName -SectionTemplate OneColumn -Order 1 | Out-Null
+            $introText = Get-Value $pageConfig 'introText'
+            if ($introText) {
+                Add-PnPPageTextPart -Page $pageName -Section 1 -Column 1 -Order 1 -Text "<p>$(ConvertTo-XmlText $introText)</p>" | Out-Null
+            }
+            Add-PnPPageWebPart -Page $pageName -Component $component -Section 1 -Column 1 -Order 2 | Out-Null
+            Set-PnPPage -Identity $pageName -CommentsEnabled:$false | Out-Null
+            Set-PnPPage -Identity $pageName -Publish | Out-Null
+            Write-Created "Page '$pageTitle' with the Goods Receiving web part (published)"
+            $pageResult = 'created'
+        }
+    }
+
+    if ($pageResult -ne 'missing-webpart' -and (Get-Value $pageConfig 'addToNavigation' $true)) {
+        $pageUrl = "SitePages/$pageName.aspx"
+        $existingNode = Get-PnPNavigationNode -Location QuickLaunch |
+            Where-Object { $_.Title -eq $pageTitle -or ([string]$_.Url).EndsWith($pageUrl) } |
+            Select-Object -First 1
+        if ($existingNode) {
+            Write-Exists "Navigation link '$pageTitle'"
+        } else {
+            Add-PnPNavigationNode -Location QuickLaunch -Title $pageTitle -Url $pageUrl -First | Out-Null
+            Write-Created "Navigation link '$pageTitle' (top of the site navigation)"
+        }
+    }
+}
+
+# ---------------------------------------------------------------------------
 # Done
 # ---------------------------------------------------------------------------
 Write-Step 'Finished'
+$pageStep = switch ($pageResult) {
+    'missing-webpart' { "Deploy goods-receiving.sppkg (DEPLOYMENT.md, section 4) and run this script again to create the page." }
+    'skipped' { "Add the Goods Receiving web part to a page (DEPLOYMENT.md, section 6)." }
+    default { "Open the page: $($SiteUrl.TrimEnd('/'))/SitePages/$($pageConfig.name).aspx" }
+}
 Write-Host @"
     Next steps:
       1. Add people to '$($solution.groups.receivers)' and '$($solution.groups.supervisors)'
          (Site settings > People and groups). Add people directly or through a security group.
       2. Check Site settings > Regional settings: the time zone must be the plant's time zone.
-      3. Deploy the .sppkg package and add the web part to a page (see DEPLOYMENT.md).
+      3. $pageStep
 "@

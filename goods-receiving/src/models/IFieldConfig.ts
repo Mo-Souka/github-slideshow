@@ -111,6 +111,13 @@ export interface ISolutionConfig {
     defaultSortFieldKey: string;
     defaultSortAscending: boolean;
   };
+  /** Page created by the provisioning script (not used by the web part itself). */
+  page?: {
+    name: string;
+    title: string;
+    introText?: string;
+    addToNavigation?: boolean;
+  };
   export: {
     maxRows: number;
     fileNamePrefix: string;

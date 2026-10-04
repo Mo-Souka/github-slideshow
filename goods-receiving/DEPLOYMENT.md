@@ -103,8 +103,13 @@ the warehouse site:
 - version history settings
 - the groups *Receiving Team* and *Receiving Supervisors*
 - the permissions for those groups
+- the **Goods Receiving page**, with the web part on it and a navigation link
 
 It is safe to run again; anything that exists is left unchanged.
+
+> **Order matters for the page:** deploy the package first (section 4), then run the script. If the
+> script runs before the package is deployed, it creates everything except the page, and tells
+> you to run it again afterwards.
 
 ### 5.1 Prerequisites on the computer that runs the script
 
@@ -163,7 +168,24 @@ further hardening options.
 
 ---
 
-## 6. Add the web part to a page
+## 6. The Goods Receiving page
+
+The provisioning script creates and publishes the page **Goods Receiving**
+(`https://<tenant>.sharepoint.com/sites/warehouse/SitePages/Goods-Receiving.aspx`):
+
+- a banner with the page title
+- a short intro text
+- the web part below it
+- a link at the top of the site navigation
+
+Nothing else is needed. Share the link with the warehouse team. On tablets and phones the page
+works in the browser and in the SharePoint mobile app.
+
+To change the page title or intro text before running the script, edit the `page` section in
+`src/config/solution.json`. After the page exists, edit it in SharePoint like any other page.
+The script never changes an existing page.
+
+### Adding the web part to another page manually
 
 1. On the warehouse site click **+ New → Page**. Choose a blank page and name it, e.g. **Goods Receiving**.
 2. Use a **one-column, full-width or wide section**, which gives the most room for the table.
@@ -211,7 +233,7 @@ Set-PnPPage -Identity "GoodsReceivingApp" -Publish
 - [ ] Provisioning script run on the warehouse site without errors
 - [ ] People added to *Receiving Team* and *Receiving Supervisors*
 - [ ] Site time zone = plant time zone
-- [ ] Page created with the Goods Receiving web part and published
+- [ ] Provisioning script output says the page **Goods Receiving** was created (or already exists)
 - [ ] Smoke test:
   - [ ] a receiver creates and submits a record with a photo
   - [ ] a different supervisor approves it

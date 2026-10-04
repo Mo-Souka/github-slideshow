@@ -66,6 +66,18 @@
         "defaultSortAscending": { "type": "boolean" }
       }
     },
+    "page": {
+      "description": "The page the provisioning script creates with the web part on it.",
+      "type": "object",
+      "required": ["name", "title"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "description": "File name of the page (without .aspx), e.g. Goods-Receiving.", "type": "string", "pattern": "^[A-Za-z0-9_-]+$" },
+        "title": { "description": "Page title shown in the banner and in the navigation.", "type": "string" },
+        "introText": { "description": "Short text above the web part. Leave empty for none.", "type": "string" },
+        "addToNavigation": { "description": "Add a link to the page at the top of the site navigation.", "type": "boolean" }
+      }
+    },
     "export": {
       "type": "object",
       "required": ["maxRows", "fileNamePrefix", "sheetName"],
