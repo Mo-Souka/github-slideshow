@@ -142,7 +142,7 @@ export const RecordDetail: React.FC<IRecordDetailProps> = ({ recordId }) => {
           <StatusBadge field={approvalField} value={status} />
           {otherBadgeFields.map((f) => {
             const value = record.values[f.key];
-            return <StatusBadge key={f.key} field={f} value={typeof value === 'string' ? value : undefined} />;
+            return <StatusBadge key={f.key} field={f} value={typeof value === 'string' ? value : undefined} showLabel={true} />;
           })}
         </div>
         <div className={styles.toolbar}>

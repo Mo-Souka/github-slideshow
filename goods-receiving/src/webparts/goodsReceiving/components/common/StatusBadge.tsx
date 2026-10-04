@@ -13,15 +13,17 @@ const TONE_CLASS: Record<BadgeTone, string> = {
 export interface IStatusBadgeProps {
   field: IFieldConfig;
   value: string | undefined;
+  /** Prefix the value with the field name, e.g. "Inspection Status: Accepted". */
+  showLabel?: boolean;
 }
 
 /** Coloured badge for choice fields that define "badgeTones" in fields.json. */
-export const StatusBadge: React.FC<IStatusBadgeProps> = ({ field, value }) => {
+export const StatusBadge: React.FC<IStatusBadgeProps> = ({ field, value, showLabel }) => {
   if (!value) return null;
   const tone: BadgeTone = (field.badgeTones && field.badgeTones[value]) || 'neutral';
   return (
     <span className={`${styles.badge} ${TONE_CLASS[tone]}`} title={`${field.displayName}: ${value}`}>
-      {value}
+      {showLabel ? `${field.displayName}: ${value}` : value}
     </span>
   );
 };

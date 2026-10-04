@@ -282,13 +282,12 @@ export const RecordForm: React.FC<IRecordFormProps> = ({ recordId }) => {
         />
       </section>
 
-      {saveError !== undefined && (
-        <div className={styles.notification}>
-          <ErrorMessage error={saveError} onDismiss={() => setSaveError(undefined)} />
-        </div>
-      )}
-
       <div className={styles.actions}>
+        {saveError !== undefined && (
+          <div className={styles.fullRow}>
+            <ErrorMessage error={saveError} onDismiss={() => setSaveError(undefined)} />
+          </div>
+        )}
         {permissions.canSubmit && (
           <PrimaryButton
             text={status === ApprovalStatus.Rejected ? 'Resubmit for Approval' : 'Submit for Approval'}

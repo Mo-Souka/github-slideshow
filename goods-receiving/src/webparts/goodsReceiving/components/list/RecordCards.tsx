@@ -12,12 +12,15 @@ export interface IRecordCardsProps {
   onOpen: (record: IReceivingRecord) => void;
 }
 
-/** Phone layout: one tappable card per record. Uses the same "showInTable" fields as the table. */
+/** Number of field rows on a card; the first table columns (by "order") are shown. */
+const CARD_ROWS = 5;
+
+/** Phone layout: one tappable card per record. Uses the first "showInTable" fields. */
 export const RecordCards: React.FC<IRecordCardsProps> = ({ records, fields, onOpen }) => {
   const recordIdField = fields.filter((f) => f.key === FieldKeys.recordId)[0];
   const approvalField = fields.filter((f) => f.key === FieldKeys.approvalStatus)[0];
   const badgeFields = fields.filter((f) => hasBadge(f) && f.key !== FieldKeys.approvalStatus);
-  const rowFields = fields.filter((f) => f.key !== FieldKeys.recordId && !hasBadge(f));
+  const rowFields = fields.filter((f) => f.key !== FieldKeys.recordId && !hasBadge(f)).slice(0, CARD_ROWS);
 
   return (
     <div className={styles.cards}>

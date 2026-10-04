@@ -25,7 +25,7 @@
       "includeInExport": true,
       "searchable": true,
       "sortable": true,
-      "tableWidth": 130
+      "tableWidth": 125
     },
     {
       "key": "receivingDate",
@@ -42,7 +42,7 @@
       "includeInExport": true,
       "filterable": true,
       "sortable": true,
-      "tableWidth": 110
+      "tableWidth": 95
     },
     {
       "key": "supplierName",
@@ -60,7 +60,7 @@
       "filterable": true,
       "searchable": true,
       "sortable": true,
-      "tableWidth": 180
+      "tableWidth": 150
     },
     {
       "key": "purchaseOrderNumber",
@@ -77,7 +77,7 @@
       "includeInExport": true,
       "searchable": true,
       "sortable": true,
-      "tableWidth": 130
+      "tableWidth": 115
     },
     {
       "key": "deliveryNoteNumber",
@@ -136,7 +136,7 @@
       "includeInExport": true,
       "searchable": true,
       "sortable": true,
-      "tableWidth": 130
+      "tableWidth": 105
     },
     {
       "key": "materialDescription",
@@ -150,7 +150,7 @@
       "showInTable": true,
       "includeInExport": true,
       "sortable": true,
-      "tableWidth": 200
+      "tableWidth": 170
     },
     {
       "key": "quantityReceived",
@@ -165,7 +165,7 @@
       "showInTable": true,
       "includeInExport": true,
       "sortable": true,
-      "tableWidth": 90
+      "tableWidth": 80
     },
     {
       "key": "unitOfMeasure",
@@ -179,7 +179,7 @@
       "showInTable": true,
       "includeInExport": true,
       "sortable": true,
-      "tableWidth": 70
+      "tableWidth": 55
     },
     {
       "key": "batchNumber",
@@ -195,7 +195,7 @@
       "includeInExport": true,
       "searchable": true,
       "sortable": true,
-      "tableWidth": 120
+      "tableWidth": 90
     },
     {
       "key": "warehouseLocation",
@@ -225,7 +225,7 @@
       "includeInExport": true,
       "filterable": true,
       "sortable": true,
-      "tableWidth": 150
+      "tableWidth": 130
     },
     {
       "key": "inspectionStatus",
@@ -246,7 +246,7 @@
       "includeInExport": true,
       "filterable": true,
       "sortable": true,
-      "tableWidth": 140
+      "tableWidth": 130
     },
     {
       "key": "receivingComments",
@@ -289,7 +289,7 @@
       "includeInExport": true,
       "filterable": true,
       "sortable": true,
-      "tableWidth": 140
+      "tableWidth": 130
     },
     {
       "key": "supervisorComments",

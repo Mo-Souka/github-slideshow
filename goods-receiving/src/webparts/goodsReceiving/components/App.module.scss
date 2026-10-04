@@ -137,6 +137,11 @@ $surfaceAlt: "[theme:neutralLighterAlt, default: #faf9f8]";
   border-top: 1px solid $border;
 }
 
+// A message inside the action bar takes the full row above the buttons.
+.actions > .fullRow {
+  flex: 1 1 100%;
+}
+
 @container (max-width: 639px) {
   .actions > * {
     flex: 1 1 100%;

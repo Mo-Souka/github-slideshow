@@ -20,12 +20,15 @@ export interface IRecordTableProps {
 export const RecordTable: React.FC<IRecordTableProps> = ({ records, fields, sortKey, sortAscending, onSort, onOpen }) => {
   const columns: IColumn[] = fields.map((field) => {
     const width = field.tableWidth || 120;
+    // Badges are not truncated, so their column must fit the longest choice.
+    const badgeWidth = hasBadge(field) ? Math.max(...(field.choices || ['']).map((c) => c.length)) * 7 + 24 : 0;
+    const minWidth = Math.max(Math.round(width * 0.6), badgeWidth);
     return {
       key: field.key,
       name: field.displayName,
       fieldName: field.key,
-      minWidth: Math.round(width * 0.75),
-      maxWidth: width,
+      minWidth,
+      maxWidth: Math.max(width, minWidth),
       isResizable: true,
       isSorted: field.key === sortKey,
       isSortedDescending: field.key === sortKey && !sortAscending,
@@ -52,13 +55,13 @@ export const RecordTable: React.FC<IRecordTableProps> = ({ records, fields, sort
   });
 
   return (
-    <div style={{ overflowX: 'auto' }}>
+    <div>
       <DetailsList
         items={records}
         columns={columns}
         selectionMode={SelectionMode.none}
         layoutMode={DetailsListLayoutMode.justified}
-        constrainMode={ConstrainMode.unconstrained}
+        constrainMode={ConstrainMode.horizontalConstrained}
         isHeaderVisible={true}
         getKey={(item: IReceivingRecord) => String(item.id)}
         onItemInvoked={(item: IReceivingRecord) => onOpen(item)}
