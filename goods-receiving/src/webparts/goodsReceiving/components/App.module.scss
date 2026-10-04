@@ -1,0 +1,429 @@
+// Layout follows the web part's own width (container queries), so the app also
+// works when placed in a narrow column on a desktop page.
+
+$border: "[theme:neutralLight, default: #edebe9]";
+$subtle: "[theme:neutralSecondary, default: #605e5c]";
+$surface: "[theme:white, default: #ffffff]";
+$surfaceAlt: "[theme:neutralLighterAlt, default: #faf9f8]";
+
+.app {
+  container-type: inline-size;
+  color: "[theme:bodyText, default: #323130]";
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.notification {
+  margin-bottom: 12px;
+}
+
+// ---------------------------------------------------------------- headers
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-width: 0;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  word-break: break-word;
+}
+
+.subtitle {
+  color: $subtle;
+  font-size: 13px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+// ---------------------------------------------------------------- sections
+.section {
+  border: 1px solid $border;
+  border-radius: 4px;
+  padding: 12px 16px 16px;
+  margin-bottom: 12px;
+  background: $surface;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px 16px;
+}
+
+@container (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container (min-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.fieldError {
+  color: "[theme:errorText, default: #a4262c]";
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.help {
+  color: $subtle;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+// Read-only label/value pairs (detail view)
+.displayField {
+  min-width: 0;
+}
+
+.displayLabel {
+  color: $subtle;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.displayValue {
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 20px;
+}
+
+.empty {
+  color: $subtle;
+}
+
+// ---------------------------------------------------------------- actions
+.actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0;
+  background: $surface;
+  border-top: 1px solid $border;
+}
+
+@container (max-width: 639px) {
+  .actions > * {
+    flex: 1 1 100%;
+  }
+
+  .actions :global(.ms-Button),
+  .toolbar :global(.ms-Button) {
+    min-height: 44px;
+  }
+}
+
+// ---------------------------------------------------------------- badges
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.toneNeutral {
+  background: #edebe9;
+  color: #323130;
+}
+
+.toneInfo {
+  background: #deecf9;
+  color: #004578;
+}
+
+.toneSuccess {
+  background: #dff6dd;
+  color: #0b5a08;
+}
+
+.toneWarning {
+  background: #fff4ce;
+  color: #6d5700;
+}
+
+.toneDanger {
+  background: #fde7e9;
+  color: #a4262c;
+}
+
+// ---------------------------------------------------------------- record list
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.filterBar > .search {
+  flex: 1 1 240px;
+  min-width: 200px;
+}
+
+.filterBar > .dateFilter {
+  flex: 0 1 160px;
+  min-width: 140px;
+}
+
+@container (max-width: 639px) {
+  .filterBar > .search,
+  .filterBar > .dateFilter {
+    flex: 1 1 100%;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px 2px 10px;
+  border-radius: 14px;
+  background: "[theme:neutralLighter, default: #f3f2f1]";
+  font-size: 12px;
+}
+
+.recordLink {
+  font-weight: 600;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid $border;
+  border-radius: 4px;
+  padding: 12px;
+  background: $surface;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.card:hover,
+.card:focus {
+  border-color: "[theme:themePrimary, default: #0078d4]";
+  outline: none;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.cardTitle {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.cardRow {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  padding: 1px 0;
+}
+
+.cardLabel {
+  color: $subtle;
+  flex: 0 0 42%;
+}
+
+.cardBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.emptyState {
+  padding: 32px 16px;
+  text-align: center;
+  color: $subtle;
+  border: 1px dashed $border;
+  border-radius: 4px;
+}
+
+// ---------------------------------------------------------------- attachments
+.attachmentGroups {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+@container (min-width: 800px) {
+  .attachmentGroups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.attachmentGroup {
+  border: 1px solid $border;
+  border-radius: 4px;
+  padding: 10px 12px;
+  background: $surfaceAlt;
+}
+
+.attachmentGroupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.attachmentGroupTitle {
+  font-weight: 600;
+}
+
+.dropZone {
+  border: 2px dashed $border;
+  border-radius: 4px;
+  padding: 12px;
+  text-align: center;
+  color: $subtle;
+  font-size: 13px;
+  margin-top: 6px;
+  transition: background-color 0.1s, border-color 0.1s;
+}
+
+.dropZoneActive {
+  border-color: "[theme:themePrimary, default: #0078d4]";
+  background: "[theme:themeLighterAlt, default: #eff6fc]";
+}
+
+.fileRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid $border;
+  min-width: 0;
+}
+
+.fileRow:last-child {
+  border-bottom: none;
+}
+
+.fileThumb {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  object-fit: cover;
+  border-radius: 2px;
+  background: $surface;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.fileInfo {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.fileName {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fileMeta {
+  color: $subtle;
+  font-size: 12px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+// ---------------------------------------------------------------- history
+.historyEntry {
+  border-left: 3px solid $border;
+  padding: 4px 0 8px 12px;
+  margin-bottom: 8px;
+}
+
+.historyMeta {
+  font-size: 13px;
+  color: $subtle;
+  margin-bottom: 4px;
+}
+
+.historyChange {
+  font-size: 13px;
+  word-break: break-word;
+}
+
+.oldValue {
+  text-decoration: line-through;
+  color: $subtle;
+}
+
+.loading {
+  padding: 32px 0;
+}

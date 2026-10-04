@@ -1,16 +1,14 @@
 define([], function() {
   return {
-    "PropertyPaneDescription": "Description",
-    "BasicGroupName": "Group Name",
-    "DescriptionFieldLabel": "Description Field",
-    "AppLocalEnvironmentSharePoint": "The app is running on your local environment as SharePoint web part",
-    "AppLocalEnvironmentTeams": "The app is running on your local environment as Microsoft Teams app",
-    "AppLocalEnvironmentOffice": "The app is running on your local environment in office.com",
-    "AppLocalEnvironmentOutlook": "The app is running on your local environment in Outlook",
-    "AppSharePointEnvironment": "The app is running on SharePoint page",
-    "AppTeamsTabEnvironment": "The app is running in Microsoft Teams",
-    "AppOfficeEnvironment": "The app is running in office.com",
-    "AppOutlookEnvironment": "The app is running in Outlook",
-    "UnknownEnvironment": "The app is running in an unknown environment"
+    "PropertyPaneDescription": "Settings for the Goods Receiving web part. Leave a field empty to use the default.",
+    "DataGroupName": "Data",
+    "ListTitleLabel": "Records list",
+    "ListTitleDescription": "Title of the SharePoint list that stores the receiving records.",
+    "LibraryTitleLabel": "Documents library",
+    "DataSiteUrlLabel": "Site URL (optional)",
+    "DataSiteUrlDescription": "Only needed if the list and library are on a different site than this page.",
+    "ListViewGroupName": "Record list",
+    "DateWindowLabel": "Default date range (days back from today)",
+    "PageSizeLabel": "Records per page"
   }
 });

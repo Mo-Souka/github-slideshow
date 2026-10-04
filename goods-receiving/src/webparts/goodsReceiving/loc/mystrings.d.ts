@@ -1,16 +1,14 @@
 declare interface IGoodsReceivingWebPartStrings {
   PropertyPaneDescription: string;
-  BasicGroupName: string;
-  DescriptionFieldLabel: string;
-  AppLocalEnvironmentSharePoint: string;
-  AppLocalEnvironmentTeams: string;
-  AppLocalEnvironmentOffice: string;
-  AppLocalEnvironmentOutlook: string;
-  AppSharePointEnvironment: string;
-  AppTeamsTabEnvironment: string;
-  AppOfficeEnvironment: string;
-  AppOutlookEnvironment: string;
-  UnknownEnvironment: string;
+  DataGroupName: string;
+  ListTitleLabel: string;
+  ListTitleDescription: string;
+  LibraryTitleLabel: string;
+  DataSiteUrlLabel: string;
+  DataSiteUrlDescription: string;
+  ListViewGroupName: string;
+  DateWindowLabel: string;
+  PageSizeLabel: string;
 }
 
 declare module 'GoodsReceivingWebPartStrings' {

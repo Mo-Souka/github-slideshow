@@ -12,17 +12,21 @@
   // Components that allow authors to embed arbitrary script code should set this to true.
   // https://support.office.com/en-us/article/Turn-scripting-capabilities-on-or-off-1f2c515f-5d7e-448a-9fd7-835da935584f
   "requiresCustomScript": false,
-  "supportedHosts": ["SharePointWebPart", "TeamsPersonalApp", "TeamsTab", "SharePointFullPage"],
-  "supportsThemeVariants": true,
+  "supportedHosts": ["SharePointWebPart", "SharePointFullPage"],
+  "supportsThemeVariants": false,
 
   "preconfiguredEntries": [{
-    "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Advanced
-    "group": { "default": "Advanced" },
-    "title": { "default": "GoodsReceiving" },
-    "description": { "default": "GoodsReceiving description" },
-    "officeFabricIconFontName": "Page",
+    "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
+    "group": { "default": "Other" },
+    "title": { "default": "Goods Receiving" },
+    "description": { "default": "Record incoming material shipments, attach documents and route them for supervisor approval." },
+    "officeFabricIconFontName": "DeliveryTruck",
     "properties": {
-      "description": "GoodsReceiving"
+      "listTitle": "",
+      "libraryTitle": "",
+      "dataSiteUrl": "",
+      "dateWindowDays": 30,
+      "pageSize": 25
     }
   }]
 }

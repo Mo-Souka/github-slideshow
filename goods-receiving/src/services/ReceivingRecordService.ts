@@ -3,7 +3,7 @@ import { IList } from '@pnp/sp/lists';
 import { RenderListDataOptions } from '@pnp/sp/lists';
 import { ApprovalStatusValue, FieldKeys } from '../config/fieldKeys';
 import { IAppConfig, IFieldConfig } from '../models/IFieldConfig';
-import { FieldValues, IReceivingRecord, IRecordPage, IVersionEntry } from '../models/IReceivingRecord';
+import { FieldValues, ILookupValue, IReceivingRecord, IRecordPage, IVersionEntry } from '../models/IReceivingRecord';
 import { buildViewXml, IRecordQuery } from '../logic/caml';
 import { formatRecordId } from '../logic/recordId';
 import { buildVersionHistory, IVersionSnapshot } from '../logic/versionDiff';
@@ -214,6 +214,22 @@ export class ReceivingRecordService {
       return buildVersionHistory(snapshots, this._config.fields);
     } catch (error) {
       throw toAppError(error, { action: 'view the change history', listTitle: this._listTitle });
+    }
+  }
+
+  /** Options for a Lookup field (e.g. a future Suppliers list). */
+  public async getLookupOptions(field: IFieldConfig): Promise<ILookupValue[]> {
+    if (!field.lookup) return [];
+    const { listTitle, showField } = field.lookup;
+    try {
+      const items: Json[] = await this._sp.web.lists
+        .getByTitle(listTitle)
+        .items.select('Id', showField)
+        .orderBy(showField, true)
+        .top(5000)();
+      return items.map((item) => ({ id: Number(item.Id), title: String(item[showField] || '') }));
+    } catch (error) {
+      throw toAppError(error, { action: `load the ${field.displayName} options`, listTitle });
     }
   }
 
