@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { DefaultButton, Dropdown, IDropdownOption, Panel, PanelType, PrimaryButton, TextField } from '@fluentui/react';
 import { IFieldConfig } from '../../../../models/IFieldConfig';
+import { ILookupValue } from '../../../../models/IReceivingRecord';
 import { FilterValue } from '../../../../logic/caml';
+import { toAppError } from '../../../../services/errors';
+import { useAppContext } from '../AppContext';
 import { PeoplePicker } from '../common/PeoplePicker';
 import { DateRangeFilter } from './DateRangeFilter';
 
@@ -12,6 +15,49 @@ export interface IFilterPanelProps {
   onApply: (filters: Record<string, FilterValue | undefined>) => void;
   onDismiss: () => void;
 }
+
+interface ILookupFilterProps {
+  field: IFieldConfig;
+  value: FilterValue | undefined;
+  onChange: (value: FilterValue | undefined) => void;
+}
+
+/** Dropdown with the items of the lookup list (e.g. a future Suppliers list). */
+const LookupFilter: React.FC<ILookupFilterProps> = ({ field, value, onChange }) => {
+  const { services } = useAppContext();
+  const [options, setOptions] = React.useState<ILookupValue[]>([]);
+  const [error, setError] = React.useState<string | undefined>();
+
+  React.useEffect(() => {
+    let cancelled = false;
+    services.records
+      .getLookupOptions(field)
+      .then((result) => {
+        if (!cancelled) setOptions(result);
+      })
+      .catch((e) => {
+        if (!cancelled) setError(toAppError(e).userMessage);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [field, services]);
+
+  const selected = value && value.kind === 'lookup' ? value.id : undefined;
+  const dropdownOptions: IDropdownOption[] = [{ key: 0, text: 'All' }].concat(options.map((o) => ({ key: o.id, text: o.title })));
+  return (
+    <Dropdown
+      label={field.displayName}
+      options={dropdownOptions}
+      selectedKey={selected || 0}
+      errorMessage={error}
+      onChange={(e, option) => {
+        const id = option ? Number(option.key) : 0;
+        onChange(id > 0 && option ? { kind: 'lookup', id, title: option.text } : undefined);
+      }}
+    />
+  );
+};
 
 /** Filters generated from the fields marked "filterable" in fields.json. */
 export const FilterPanel: React.FC<IFilterPanelProps> = ({ isOpen, fields, filters, onApply, onDismiss }) => {
@@ -54,6 +100,8 @@ export const FilterPanel: React.FC<IFilterPanelProps> = ({ isOpen, fields, filte
             placeholder="Anyone"
           />
         );
+      case 'Lookup':
+        return <LookupFilter field={field} value={current} onChange={(value) => set(field.key, value)} />;
       case 'Date':
       case 'DateTime':
         return (

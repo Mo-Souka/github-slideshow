@@ -436,17 +436,20 @@ if ($SkipPermissions) {
     $contribute = Get-PnPRoleDefinition | Where-Object { $_.RoleTypeKind -eq 'Contributor' } | Select-Object -First 1
     if (-not $contribute) { throw 'Could not find the built-in Contribute permission level on this site.' }
 
-    # Supervisors get Contribute + "Approve Items". The web part also uses this
-    # permission to recognise supervisors who are members through a nested group.
+    # Supervisors get Contribute + "Approve Items" + "Override List Behaviors".
+    #  - Approve Items: the web part also uses it to recognise supervisors who are
+    #    members through a nested Microsoft 365 / security group.
+    #  - Override List Behaviors (CancelCheckout): lets supervisors edit everyone's
+    #    records if you switch on item-level permissions (see README, "Security model").
     $supervisorLevelName = $solution.groups.supervisorPermissionLevel
     $supervisorLevel = $null
     try { $supervisorLevel = Get-PnPRoleDefinition -Identity $supervisorLevelName -ErrorAction Stop } catch { $supervisorLevel = $null }
     if ($supervisorLevel) {
         Write-Exists "Permission level '$supervisorLevelName'"
     } else {
-        Add-PnPRoleDefinition -RoleName $supervisorLevelName -Clone $contribute.Name -Include ApproveItems `
-            -Description 'Contribute plus Approve Items. Used by the Goods Receiving supervisors group.' | Out-Null
-        Write-Created "Permission level '$supervisorLevelName' (Contribute + Approve Items)"
+        Add-PnPRoleDefinition -RoleName $supervisorLevelName -Clone $contribute.Name -Include ApproveItems, CancelCheckout `
+            -Description 'Contribute plus Approve Items and Override List Behaviors. Used by the Goods Receiving supervisors group.' | Out-Null
+        Write-Created "Permission level '$supervisorLevelName' (Contribute + Approve Items + Override List Behaviors)"
     }
 
     foreach ($target in @($list, $library)) {
