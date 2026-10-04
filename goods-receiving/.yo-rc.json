@@ -1,0 +1,19 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "useGulp": false,
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.22.0",
+    "sdksVersions": {},
+    "version": "1.23.2",
+    "libraryName": "goods-receiving",
+    "libraryId": "12aa6a8c-a810-4551-baf6-3e658515e82e",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "goods-receiving",
+    "solutionShortDescription": "goods-receiving description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

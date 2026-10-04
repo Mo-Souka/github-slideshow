@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Goods Receiving solution configuration",
+  "description": "Names of the SharePoint list, library and groups, plus list view and export settings. Read by the web part and the provisioning script.",
+  "type": "object",
+  "required": ["list", "library", "groups", "recordId", "listView", "export"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "list": {
+      "type": "object",
+      "required": ["title", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "url": { "description": "Site-relative URL used when the list is created, e.g. Lists/MaterialReceivingRecords.", "type": "string" },
+        "description": { "type": "string" },
+        "majorVersionLimit": { "type": "integer", "minimum": 100, "maximum": 50000 }
+      }
+    },
+    "library": {
+      "type": "object",
+      "required": ["title", "url", "recordLookupField", "documentTypeField", "documentTypes", "photoDocumentType", "allowedExtensions", "maxFileSizeMB"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "description": { "type": "string" },
+        "majorVersionLimit": { "type": "integer", "minimum": 100, "maximum": 50000 },
+        "recordLookupField": { "$ref": "#/definitions/column" },
+        "documentTypeField": { "$ref": "#/definitions/column" },
+        "documentTypes": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "photoDocumentType": { "description": "Document type used for photos taken with the device camera.", "type": "string" },
+        "allowedExtensions": { "type": "array", "items": { "type": "string", "pattern": "^\\.[a-z0-9]+$" } },
+        "maxFileSizeMB": { "type": "number", "minimum": 1 }
+      }
+    },
+    "groups": {
+      "type": "object",
+      "required": ["receivers", "supervisors", "supervisorPermissionLevel"],
+      "additionalProperties": false,
+      "properties": {
+        "receivers": { "type": "string" },
+        "supervisors": { "type": "string" },
+        "supervisorPermissionLevel": { "type": "string" }
+      }
+    },
+    "recordId": {
+      "type": "object",
+      "required": ["prefix", "digits"],
+      "additionalProperties": false,
+      "properties": {
+        "prefix": { "type": "string", "pattern": "^[A-Z]+$" },
+        "digits": { "type": "integer", "minimum": 4, "maximum": 9 }
+      }
+    },
+    "listView": {
+      "type": "object",
+      "required": ["dateRangeFieldKey", "defaultDateWindowDays", "pageSize", "defaultSortFieldKey", "defaultSortAscending"],
+      "additionalProperties": false,
+      "properties": {
+        "dateRangeFieldKey": { "type": "string" },
+        "defaultDateWindowDays": { "type": "integer", "minimum": 1 },
+        "pageSize": { "type": "integer", "minimum": 5, "maximum": 100 },
+        "defaultSortFieldKey": { "type": "string" },
+        "defaultSortAscending": { "type": "boolean" }
+      }
+    },
+    "export": {
+      "type": "object",
+      "required": ["maxRows", "fileNamePrefix", "sheetName"],
+      "additionalProperties": false,
+      "properties": {
+        "maxRows": { "type": "integer", "minimum": 100 },
+        "fileNamePrefix": { "type": "string" },
+        "sheetName": { "type": "string", "maxLength": 31 }
+      }
+    }
+  },
+  "definitions": {
+    "column": {
+      "type": "object",
+      "required": ["internalName", "displayName"],
+      "additionalProperties": false,
+      "properties": {
+        "internalName": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+        "displayName": { "type": "string" }
+      }
+    }
+  }
+}

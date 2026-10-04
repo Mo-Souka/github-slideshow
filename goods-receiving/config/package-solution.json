@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "goods-receiving-client-side-solution",
+    "id": "12aa6a8c-a810-4551-baf6-3e658515e82e",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "Warehouse Goods Receiving",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.23.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "Goods receiving: record incoming material shipments with an approval workflow."
+      },
+      "longDescription": {
+        "default": "Web part for the warehouse to record incoming material shipments (goods receiving), attach delivery notes, invoices, photos and inspection documents, and route records to a supervisor for approval. Data is stored in the SharePoint list \"Material Receiving Records\" and the library \"Receiving Documents\"."
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "Goods Receiving",
+        "description": "Adds the Goods Receiving web part.",
+        "id": "667158a7-3e58-4cdf-8f7b-a43d70ceeaeb",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/goods-receiving.sppkg"
+  }
+}

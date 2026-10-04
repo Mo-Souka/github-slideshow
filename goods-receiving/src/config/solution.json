@@ -1,0 +1,48 @@
+{
+  "$schema": "./solution.schema.json",
+  "list": {
+    "title": "Material Receiving Records",
+    "url": "Lists/MaterialReceivingRecords",
+    "description": "Incoming material shipments recorded by the warehouse (goods receiving).",
+    "majorVersionLimit": 500
+  },
+  "library": {
+    "title": "Receiving Documents",
+    "url": "ReceivingDocuments",
+    "description": "Delivery notes, invoices, photos and inspection documents for goods receiving records.",
+    "majorVersionLimit": 500,
+    "recordLookupField": {
+      "internalName": "ReceivingRecord",
+      "displayName": "Record ID"
+    },
+    "documentTypeField": {
+      "internalName": "DocumentType",
+      "displayName": "Document Type"
+    },
+    "documentTypes": ["Delivery Note", "Invoice", "Photo", "Inspection Document"],
+    "photoDocumentType": "Photo",
+    "allowedExtensions": [".pdf", ".jpg", ".jpeg", ".png", ".heic", ".heif", ".xlsx", ".docx", ".msg"],
+    "maxFileSizeMB": 250
+  },
+  "groups": {
+    "receivers": "Receiving Team",
+    "supervisors": "Receiving Supervisors",
+    "supervisorPermissionLevel": "Receiving Supervisor"
+  },
+  "recordId": {
+    "prefix": "GR",
+    "digits": 6
+  },
+  "listView": {
+    "dateRangeFieldKey": "receivingDate",
+    "defaultDateWindowDays": 30,
+    "pageSize": 25,
+    "defaultSortFieldKey": "receivingDate",
+    "defaultSortAscending": false
+  },
+  "export": {
+    "maxRows": 10000,
+    "fileNamePrefix": "Goods-Receiving",
+    "sheetName": "Receiving Records"
+  }
+}

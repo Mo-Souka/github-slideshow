@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Goods Receiving field configuration",
+  "description": "Single source of truth for every field of a receiving record. Read by the web part (form, table, filters, export) and by the provisioning script (SharePoint columns).",
+  "type": "object",
+  "required": ["sections", "fields"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "sections": {
+      "description": "Groups of fields on the form and detail view, in display order.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "title"],
+        "additionalProperties": false,
+        "properties": {
+          "key": { "type": "string" },
+          "title": { "type": "string" }
+        }
+      }
+    },
+    "fields": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/field" }
+    }
+  },
+  "definitions": {
+    "field": {
+      "type": "object",
+      "required": ["key", "internalName", "displayName", "type", "required", "order", "showInTable", "includeInExport"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "description": "Stable identifier used by the app. camelCase, never change it after go-live.",
+          "type": "string",
+          "pattern": "^[a-z][A-Za-z0-9]*$"
+        },
+        "internalName": {
+          "description": "SharePoint internal column name. Letters and digits only, no spaces. Never change it after the column was created.",
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+        },
+        "displayName": { "description": "Label shown to users and used as the Excel column header.", "type": "string" },
+        "type": {
+          "description": "Text = single line, Note = multiple lines, Date = date only, DateTime = date and time, User = person, Lookup = reference to another list.",
+          "enum": ["Text", "Note", "Number", "Date", "DateTime", "Choice", "User", "Lookup"]
+        },
+        "description": { "description": "Help text shown under the field in the form.", "type": "string" },
+        "required": { "description": "Required when the record is submitted for approval.", "type": "boolean" },
+        "requiredForDraft": { "description": "Also required when saving a draft. These columns are also marked required in SharePoint.", "type": "boolean" },
+        "requiredWhen": {
+          "description": "Makes the field required when another field has one of the listed values.",
+          "type": "object",
+          "required": ["field", "in"],
+          "additionalProperties": false,
+          "properties": {
+            "field": { "description": "Key of the other field.", "type": "string" },
+            "in": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+            "message": { "type": "string" }
+          }
+        },
+        "builtIn": { "description": "A column SharePoint already has (Title, Author, Created, Editor, Modified). Not created by the provisioning script.", "type": "boolean" },
+        "readOnly": { "description": "Not editable in the form (set by the app or by SharePoint).", "type": "boolean" },
+        "defaultValue": {
+          "description": "Initial value for new records. Use [today] for dates and [me] for person fields.",
+          "type": ["string", "number"]
+        },
+        "choices": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "badgeTones": {
+          "description": "Shows the value as a coloured badge. Map each choice to a tone.",
+          "type": "object",
+          "additionalProperties": { "enum": ["neutral", "info", "success", "warning", "danger"] }
+        },
+        "decimals": { "description": "Number of decimal places for Number fields.", "type": "integer", "minimum": 0, "maximum": 5 },
+        "validation": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" },
+            "minExclusive": { "description": "Value must be greater than this number.", "type": "number" },
+            "maxExclusive": { "description": "Value must be less than this number.", "type": "number" },
+            "integer": { "type": "boolean" },
+            "maxLength": { "type": "integer", "minimum": 1 },
+            "pattern": { "description": "Regular expression the value must match.", "type": "string" },
+            "patternMessage": { "type": "string" }
+          }
+        },
+        "lookup": {
+          "description": "For Lookup fields: the list to look up and the column to show.",
+          "type": "object",
+          "required": ["listTitle", "showField"],
+          "additionalProperties": false,
+          "properties": {
+            "listTitle": { "type": "string" },
+            "showField": { "type": "string" }
+          }
+        },
+        "indexed": { "description": "Create a SharePoint index (needed for fast filtering above 5,000 items). Max 20 per list.", "type": "boolean" },
+        "order": { "description": "Display order in the form, table, detail view and export.", "type": "number" },
+        "section": { "description": "Key of the section the field belongs to.", "type": "string" },
+        "showInForm": { "description": "Show in the new/edit form (default true unless readOnly or builtIn).", "type": "boolean" },
+        "showInDetail": { "description": "Show in the record detail view (default true).", "type": "boolean" },
+        "showInTable": { "type": "boolean" },
+        "includeInExport": { "type": "boolean" },
+        "filterable": { "description": "Offer a filter for this field in the record list.", "type": "boolean" },
+        "searchable": { "description": "Include in the free-text search. Text fields only.", "type": "boolean" },
+        "sortable": { "type": "boolean" },
+        "tableWidth": { "description": "Column width in pixels in the record list.", "type": "number" }
+      }
+    }
+  }
+}

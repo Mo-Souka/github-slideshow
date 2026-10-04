@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "goods-receiving-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/goodsReceiving/GoodsReceivingWebPart.js",
+          "manifest": "./src/webparts/goodsReceiving/GoodsReceivingWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "GoodsReceivingWebPartStrings": "lib/webparts/goodsReceiving/loc/{locale}.js"
+  }
+}
